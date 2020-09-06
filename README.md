@@ -1,2 +1,2 @@
-# formal-languages-practice
-SPbU Formal Languages course assignments
+# SPbU Formal Languages course assignments
+

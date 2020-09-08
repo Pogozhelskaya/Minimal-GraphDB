@@ -12,7 +12,7 @@ def test_mxm():
 
     expected_res = Matrix.from_lists([0, 1, 2], [0, 1, 2], [1, 4, 9])
 
-    assert actual_res.iseq(expected_res), "Not equal"
+    assert actual_res.iseq(expected_res), "Matrices are not equal"
 
 
 def test_intersection():
@@ -43,6 +43,6 @@ def test_intersection():
 
 
 def check_correctness(res: EpsilonNFA):
-    assert res.accepts("ac")
-    assert not res.accepts("ab")
-    assert not res.accepts("abc")
+    assert res.accepts("ac"), "Word ac should be accepted"
+    assert not res.accepts("ab"), "Word ab shouldn't be accepted"
+    assert not res.accepts("abc"), "Word abc shouldn't be accepted"

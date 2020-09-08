@@ -2,11 +2,11 @@
 # SPbU Formal Languages course assignments
 
  ### Required libraries:
- pygraphblas: https://github.com/michelp/pygraphblas
+ * [pygraphblas](https://github.com/michelp/pygraphblas)
+
+ * [pyformlang](https://pypi.org/project/pyformlang/)
  
- pyformlang: https://pypi.org/project/pyformlang/
- 
- pytest: https://docs.pytest.org/en/stable/getting-started.html#install-pytest
+ * [pytest](https://docs.pytest.org/en/stable/getting-started.html#install-pytest)
  
 ### How to run
 ```

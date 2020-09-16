@@ -1,6 +1,6 @@
 import argparse
 
-from src.LabeledGraph import LabeledGraph
+from src.label_graph import LabelGraph
 from src.rpq import rpq
 
 if __name__ == '__main__':
@@ -31,8 +31,8 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    g = LabeledGraph.from_txt(args.graph)
-    r = LabeledGraph.from_regex(args.regex)
+    g = LabelGraph.from_txt(args.graph)
+    r = LabelGraph.from_regex(args.regex)
 
     res = rpq(g, r)
 

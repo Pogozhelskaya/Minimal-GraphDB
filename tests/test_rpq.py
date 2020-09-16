@@ -30,6 +30,31 @@ def test_1(tmp_path):
     assert expected.iseq(actual)
 
 
+def test_2(tmp_path):
+    edges = ['0 a 1', '1 e 4', '8 c 4', '7 a 8',
+             '4 e 7', '1 a 5', '5 a 7', '1 b 2',
+             '2 d 5', '0 b 3', '2 a 3', '3 b 6',
+             '6 a 7', '7 b 9', '9 b 10', '5 d 6']
+
+    graph = tmp_path / 'graph.txt'
+    graph.write_text('\n'.join(edges))
+
+    regex = tmp_path / 'regex.txt'
+    regex.write_text('(a+)(d|b)(a)(b)')
+
+    g = LabelGraph.from_txt(graph)
+    r = LabelGraph.from_regex(regex)
+
+    actual = rpq(g, r)
+
+    expected = Matrix.sparse(BOOL, 11, 11)
+    expected[0, 6] = True
+    expected[1, 9] = True
+    expected[2, 9] = True
+
+    assert expected.iseq(actual)
+
+
 @pytest.fixture(scope='function', params=[
     {'n': n, 'm': m, 'r': r}
     for n in range(10, 20)

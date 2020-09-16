@@ -8,6 +8,9 @@
  
  * [pytest](https://docs.pytest.org/en/stable/getting-started.html#install-pytest)
  
+ * [networkx](https://github.com/networkx/networkx)
+ 
+ 
 ### How to run tests
 ```
 git clone https://github.com/Pogozhelskaya/formal-languages-practice

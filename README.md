@@ -28,8 +28,6 @@ docker run formal-languages-practice
 ```
 ### How to use with command line
 ````
-git clone https://github.com/Pogozhelskaya/formal-languages-practice
-cd formal-languages-practice
 main.py --graph {path_to_graph} --query {path_to_query} [--sources {path_to_source_set}]
                [--destinations {path_to_destination_set}]
 ````

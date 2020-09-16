@@ -1,7 +1,5 @@
-from pygraphblas import Matrix
 from pyformlang.finite_automaton import State, EpsilonNFA, Symbol
-
-import pytest
+from pygraphblas import Matrix
 
 
 def test_mxm():

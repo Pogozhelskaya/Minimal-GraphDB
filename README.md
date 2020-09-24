@@ -35,3 +35,15 @@ main.py --graph {path_to_graph} --query {path_to_query} [--sources {path_to_sour
 For help:
 ````
 main.py -h
+````
+### Transitive closure comparison
+To get data(graphs and regular expressions) for benchmarks download the archive:
+````
+gdown https://drive.google.com/uc?id=158g01o2rpdq5eL3Ari8e5SPbbeZTJspr
+````
+To run benchmarks:
+`````
+chmod +x run.sh
+/bin/bash run.sh
+`````
+After testing LUBM graphs dataset, there has been detected no difference between calculating transitive closure with squaring and transitive closure with multiplying by adjacency matrix. More detailed analysis report can be found at report.pdf. 

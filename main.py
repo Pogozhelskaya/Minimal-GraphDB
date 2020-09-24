@@ -52,12 +52,12 @@ if __name__ == '__main__':
         time_sum_2 += timeit.default_timer() - time_2
 
         assert (res_1.nvals == res_2.nvals)
-        print(str(res_1.nvals))
 
     print(str(time_sum_1 / 5))
     print(str(time_sum_2 / 5))
 
     res = rpq(g, r)
+    print(str(res.nvals))
     srcs = None
     if args.sources is not None:
         with open(args.sources, 'r') as f:

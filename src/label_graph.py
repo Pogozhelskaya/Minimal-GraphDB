@@ -5,6 +5,7 @@ from pygraphblas import *
 class LabelGraph:
     def __init__(self, size):
         self.size = size
+        self.dict = {}
         self.vertices = set()
         self.labels = set()
         self.matrices = dict()
@@ -18,6 +19,7 @@ class LabelGraph:
         return self.matrices[item]
 
     def __setitem__(self, key, value):
+        self.labels.add(key)
         self.matrices[key] = value
 
     def accepts(self, word):

@@ -2,6 +2,10 @@ import argparse
 import timeit
 from statistics import fmean, variance
 
+from pyformlang.cfg import Terminal
+
+from src.cfg_algorithms import cyk
+from src.cnf import WeakCNF
 from src.label_graph import LabelGraph
 from src.rpq import rpq, rpq_with_linear_tc
 

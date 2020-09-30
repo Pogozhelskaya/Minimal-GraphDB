@@ -1,9 +1,5 @@
-from pygraphblas import *
-
+from pygraphblas import Matrix, BOOL, lib
 from src.label_graph import LabelGraph
-
-
-
 
 
 def rpq(g: LabelGraph, r: LabelGraph) -> Matrix:

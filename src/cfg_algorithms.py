@@ -1,10 +1,11 @@
 from typing import List
 
-from pyformlang.cfg import Terminal
+from pyformlang.cfg import Terminal, CFG
 from pygraphblas import Matrix, BOOL, lib
 
 from src.label_graph import LabelGraph
 from src.cnf import WeakCNF
+from src.utils import transitive_closure
 
 
 def cyk(w: List[Terminal], cnf: WeakCNF):
@@ -31,7 +32,7 @@ def cyk(w: List[Terminal], cnf: WeakCNF):
     return cnf.start_symbol in dp[n - 1][0]
 
 
-def hellings(g: LabelGraph, gr: WeakCNF) -> Matrix:
+def hellings(g: LabelGraph, gr: WeakCNF):
     result = LabelGraph(g.size)
 
     for variable in gr.variables:
@@ -61,4 +62,80 @@ def hellings(g: LabelGraph, gr: WeakCNF) -> Matrix:
                                 changing = True
                                 result.dict[p.head][i, j] = True
 
-    return result.dict[gr.start_symbol]
+    return set(zip(*result.dict[gr.start_symbol].to_lists()[:2]))
+
+
+def mxm_cfpq(g: LabelGraph, gr: WeakCNF):
+    m = LabelGraph(g.size)
+
+    complex_productions = set()
+
+    for production in gr.productions:
+        if len(production.body) == 1:
+            m[production.head] += g[production.body[0].value]
+        elif len(production.body) == 2:
+            complex_productions.add(production)
+
+    if gr.generate_epsilon():
+        for i in range(g.size):
+            m[gr.start_symbol][i, i] = True
+
+    changed = True
+    while changed:
+        changed = False
+        for production in complex_productions:
+            old_nnz = m[production.head].nvals
+            m[production.head] += m[production.body[0]] @ m[production.body[1]]
+            new_nnz = m[production.head].nvals
+            changed |= not old_nnz == new_nnz
+    return set(zip(*m[gr.start_symbol].to_lists()[:2]))
+
+
+def tensor_cfpq(g: LabelGraph, gr: CFG):
+    graph_size = 0
+    for p in gr.productions:
+        graph_size += len(p.body) + 1
+    rsa = LabelGraph(graph_size)
+
+    heads = dict()
+
+    cur = 0
+    for p in gr.productions:
+        rsa.start_states.add(cur)
+        heads[(cur, cur + len(p.body))] = p.head
+        for unit in p.body:
+            if isinstance(unit, Terminal):
+                rsa[unit.value][cur, cur + 1] = True
+            else:
+                rsa[unit][cur, cur + 1] = True
+            cur += 1
+        rsa.final_states.add(cur)
+        cur += 1
+
+    m = g.dup()
+
+    tc = m.get_intersection(rsa).get_transitive_closure()
+
+    while True:
+        prev = tc.nvals
+        for i, j, _ in zip(*tc.select(lib.GxB_NONZERO).to_lists()):
+            i_m, i_rsa = i // rsa.size, i % rsa.size
+            j_m, j_rsa = j // rsa.size, j % rsa.size
+            if (i_m in m.start_states) and (i_rsa in rsa.start_states):
+                if (j_m in m.final_states) and (j_rsa in rsa.final_states):
+                    m[heads[(i_rsa, j_rsa)]][i_m, j_m] = True
+
+        tmp = m.get_intersection(rsa)
+        for label in tmp.labels:
+            tc += tmp[label]
+        tc = transitive_closure(tc)
+
+        if prev == tc.nvals:
+            break
+
+    ans = set(zip(*m[gr.start_symbol].to_lists()[:2]))
+
+    if gr.generate_epsilon():
+        ans |= {(i, i) for i in range(g.size)}
+
+    return ans

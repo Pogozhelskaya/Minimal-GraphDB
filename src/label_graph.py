@@ -1,5 +1,9 @@
+from itertools import product
+
 from pyformlang import *
 from pygraphblas import *
+
+from src.utils import transitive_closure
 
 
 class LabelGraph:
@@ -21,6 +25,38 @@ class LabelGraph:
     def __setitem__(self, key, value):
         self.labels.add(key)
         self.matrices[key] = value
+
+    def get_intersection(self, other):
+        kron = LabelGraph(self.size * other.size)
+
+        tmp = Matrix.sparse(BOOL, kron.size, kron.size)
+        for label in self.labels:
+            self[label].kronecker(other[label], out=tmp)
+            kron[label] += tmp
+
+        for start_state in product(self.start_states, other.start_states):
+            kron.start_states.add(start_state[0] * other.size + start_state[1])
+
+        for final_state in product(self.final_states, other.final_states):
+            kron.start_states.add(final_state[0] * other.size + final_state[1])
+
+        return kron
+
+    def get_transitive_closure(self):
+        tc = Matrix.sparse(BOOL, self.size, self.size)
+
+        for label in self.labels:
+            tc += self[label]
+
+        return transitive_closure(tc)
+
+    def dup(self):
+        dp = LabelGraph(self.size)
+        dp.start_states = self.start_states.copy()
+        dp.final_states = self.final_states.copy()
+        for label in self.labels:
+            dp[label] = self[label].dup()
+        return dp
 
     def accepts(self, word):
         nfa = finite_automaton.EpsilonNFA(

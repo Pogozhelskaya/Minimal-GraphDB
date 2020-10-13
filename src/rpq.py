@@ -3,24 +3,13 @@ from src.label_graph import LabelGraph
 
 
 def rpq(g: LabelGraph, r: LabelGraph) -> Matrix:
-    kron = LabelGraph(g.size * r.size)
-    tmp = Matrix.sparse(BOOL, kron.size, kron.size)
-    for label in g.labels:
-        g[label].kronecker(r[label], out=tmp)
-        kron[label] += tmp
+    kron = g.get_intersection(r)
 
-    transitive_closure = Matrix.sparse(BOOL, kron.size, kron.size)
-    for label in kron.labels:
-        transitive_closure += kron[label]
-
-    while True:
-        prev = transitive_closure.nvals
-        transitive_closure += transitive_closure @ transitive_closure
-        if prev == transitive_closure.nvals:
-            break
+    tc = kron.get_transitive_closure()
 
     ans = Matrix.sparse(BOOL, g.size, g.size)
-    for i, j, _ in zip(*transitive_closure.select(lib.GxB_NONZERO).to_lists()):
+
+    for i, j, _ in zip(*tc.select(lib.GxB_NONZERO).to_lists()):
         i_g, i_r = i // r.size, i % r.size
         j_g, j_r = j // r.size, j % r.size
         if (i_g in g.start_states) and (i_r in r.start_states):

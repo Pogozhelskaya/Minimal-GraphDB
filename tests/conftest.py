@@ -3,6 +3,7 @@ from itertools import product, chain
 from src.cnf import WeakCNF
 import pytest
 from pyformlang.cfg import *
+from src.cfg_algorithms import hellings, mxm_cfpq, tensor_cfpq
 
 grammars = [
     '\n'.join(['S -> a S\nS -> '])
@@ -65,16 +66,21 @@ def auto_false_suite(request):
         , 'expected': {(1, 3), (0, 2), (2, 3), (1, 2), (0, 3)} | {(i, i) for i in range(4)}
     }
     , {
-         'edges': ['0 a 0', '0 b 0']
-         , 'cnf': grammars[5]
-         , 'expected': {(0, 0)}
+        'edges': ['0 a 0', '0 b 0']
+        , 'cnf': grammars[5]
+        , 'expected': {(0, 0)}
     }
     , {
-         'edges': ['0 b 1', '1 b 1', '1 a 2', '2 a 3', '2 b 3', '3 b 4', '4 b 3']
-         , 'cnf': grammars[2]
-         , 'expected': {(0, 1), (2, 4), (1, 2), (0, 4), (3, 4), (4, 3), (0, 3), (1, 4), (2, 3), (1, 3)}\
-                       | {(i, i) for i in range(5)}
+        'edges': ['0 b 1', '1 b 1', '1 a 2', '2 a 3', '2 b 3', '3 b 4', '4 b 3']
+        , 'cnf': grammars[2]
+        , 'expected': {(0, 1), (2, 4), (1, 2), (0, 4), (3, 4), (4, 3), (0, 3), (1, 4), (2, 3), (1, 3)} \
+                      | {(i, i) for i in range(5)}
     }
 ])
-def manual_suite_hellings(request):
+def manual_suite_cfpq(request):
+    return request.param
+
+
+@pytest.fixture(scope='session', params=[hellings, mxm_cfpq, tensor_cfpq])
+def cfpq_algo(request):
     return request.param

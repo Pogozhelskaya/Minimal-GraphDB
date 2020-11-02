@@ -1,10 +1,11 @@
 from typing import List
 
-from pyformlang.cfg import Terminal, CFG
+from pyformlang.cfg import Terminal, CFG, Variable
 from pygraphblas import Matrix, BOOL, lib
 
-from src.label_graph import LabelGraph
 from src.cnf import WeakCNF
+from src.label_graph import LabelGraph
+from src.regex_cfg import RegexCFG
 from src.utils import transitive_closure
 
 
@@ -91,7 +92,9 @@ def mxm_cfpq(g: LabelGraph, gr: WeakCNF):
     return set(zip(*m[gr.start_symbol].to_lists()[:2]))
 
 
-def tensor_cfpq(g: LabelGraph, gr: CFG):
+def tensor_cfg_cfpq(g: LabelGraph, gr: CFG):
+    m = g.dup()
+
     graph_size = 0
     for p in gr.productions:
         graph_size += len(p.body) + 1
@@ -103,6 +106,9 @@ def tensor_cfpq(g: LabelGraph, gr: CFG):
     for p in gr.productions:
         rsa.start_states.add(cur)
         heads[(cur, cur + len(p.body))] = p.head
+        if len(p.body) == 0:
+            for i in m.vertices:
+                m[p.head][i, i] = True
         for unit in p.body:
             if isinstance(unit, Terminal):
                 rsa[unit.value][cur, cur + 1] = True
@@ -111,8 +117,6 @@ def tensor_cfpq(g: LabelGraph, gr: CFG):
             cur += 1
         rsa.final_states.add(cur)
         cur += 1
-
-    m = g.dup()
 
     tc = m.get_intersection(rsa).get_transitive_closure()
 
@@ -135,7 +139,64 @@ def tensor_cfpq(g: LabelGraph, gr: CFG):
 
     ans = set(zip(*m[gr.start_symbol].to_lists()[:2]))
 
-    if gr.generate_epsilon():
-        ans |= {(i, i) for i in range(g.size)}
+    return ans
+
+
+def tensor_rsa_cfpq(g: LabelGraph, gr: RegexCFG):
+    m = g.dup()
+
+    graph_size = 0
+    for x in gr.boxes:
+        for box in gr.boxes[x]:
+            graph_size += len(box.states)
+    rsa = LabelGraph(graph_size)
+
+    heads = dict()
+
+    cur = 0
+    for x in gr.boxes:
+        for box in gr.boxes[x]:
+            name = dict()
+            for s in box.states:
+                if s not in name:
+                    name[s] = cur
+                    cur += 1
+                if s in box.final_states:
+                    rsa.final_states.add(name[s])
+            rsa.start_states.add(name[box.start_state])
+            if box.start_state in box.final_states:
+                for i in m.vertices:
+                    m[Variable(x)][i, i] = True
+            for s in box.final_states:
+                heads[(name[box.start_state], name[s])] = Variable(x)
+            for v in box._transition_function._transitions:
+                for label in box._transition_function._transitions[v]:
+                    to = box._transition_function._transitions[v][label]
+
+                    if label.value == label.value.lower():
+                        rsa[label.value][name[v], name[to]] = True
+                    else:
+                        rsa[Variable(label.value)][name[v], name[to]] = True
+
+    tc = m.get_intersection(rsa).get_transitive_closure()
+
+    while True:
+        prev = tc.nvals
+        for i, j, _ in zip(*tc.select(lib.GxB_NONZERO).to_lists()):
+            i_m, i_rsa = i // rsa.size, i % rsa.size
+            j_m, j_rsa = j // rsa.size, j % rsa.size
+            if (i_m in m.start_states) and (i_rsa in rsa.start_states):
+                if (j_m in m.final_states) and (j_rsa in rsa.final_states):
+                    m[heads[(i_rsa, j_rsa)]][i_m, j_m] = True
+
+        tmp = m.get_intersection(rsa)
+        for label in tmp.labels:
+            tc += tmp[label]
+        tc = transitive_closure(tc)
+
+        if prev == tc.nvals:
+            break
+
+    ans = set(zip(*m[gr.start_symbol].to_lists()[:2]))
 
     return ans

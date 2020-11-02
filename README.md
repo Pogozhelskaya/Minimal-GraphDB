@@ -46,4 +46,6 @@ To run benchmarks:
 chmod +x run.sh
 /bin/bash run.sh
 `````
-After testing LUBM graphs dataset, there has been detected no difference between calculating transitive closure with squaring and transitive closure with multiplying by adjacency matrix. More detailed analysis report can be found at report.pdf. 
+### Experimental analyses
+* After testing LUBM graphs dataset, there has been detected no difference between calculating transitive closure with squaring and transitive closure with multiplying by adjacency matrix. More detailed analysis report can be found at report.pdf. 
+* Report about time comparison of different CFPQ-algorithms can be found at report_cfpq.ipynb.

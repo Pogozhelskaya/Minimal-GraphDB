@@ -1,0 +1,17 @@
+"Algorithm","Graph","File","Grammar","Time (in microseconds)","Control sum"
+"hellings","FullGraph","fullgraph_50","g1",306981,2500
+"hellings","FullGraph","fullgraph_50","g2",56704971,2500
+"hellings","FullGraph","fullgraph_10","g1",1640,100
+"hellings","FullGraph","fullgraph_10","g2",22160,100
+"mxm_cfpq","FullGraph","fullgraph_50","g1",4848,2500
+"mxm_cfpq","FullGraph","fullgraph_50","g2",23010,2500
+"mxm_cfpq","FullGraph","fullgraph_10","g1",1510,100
+"mxm_cfpq","FullGraph","fullgraph_10","g2",3891,100
+"tensor_cfg_cfpq","FullGraph","fullgraph_50","g1",248249,2500
+"tensor_cfg_cfpq","FullGraph","fullgraph_50","g2",1460958,2500
+"tensor_cfg_cfpq","FullGraph","fullgraph_10","g1",6312,100
+"tensor_cfg_cfpq","FullGraph","fullgraph_10","g2",19840,100
+"tensor_rsa_cfpq","FullGraph","fullgraph_50","g1",10871,2500
+"tensor_rsa_cfpq","FullGraph","fullgraph_50","g2",35528,2500
+"tensor_rsa_cfpq","FullGraph","fullgraph_10","g1",1828,100
+"tensor_rsa_cfpq","FullGraph","fullgraph_10","g2",3366,100

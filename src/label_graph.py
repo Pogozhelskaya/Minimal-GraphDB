@@ -54,6 +54,7 @@ class LabelGraph:
         dp = LabelGraph(self.size)
         dp.start_states = self.start_states.copy()
         dp.final_states = self.final_states.copy()
+        dp.vertices = self.vertices.copy()
         for label in self.labels:
             dp[label] = self[label].dup()
         return dp

@@ -3,11 +3,11 @@ from itertools import product, chain
 from src.cnf import WeakCNF
 import pytest
 from pyformlang.cfg import *
-from src.cfg_algorithms import hellings, mxm_cfpq, tensor_cfpq
+from src.cfg_algorithms import hellings, mxm_cfpq, tensor_cfg_cfpq, tensor_rsa_cfpq
 
 grammars = [
-    '\n'.join(['S -> a S\nS -> '])
-    , '\n'.join(['S -> a S a\nS -> b S b\nS -> c'])
+    '\n'.join(['S -> a S', 'S -> '])
+    , '\n'.join(['S -> a S a', 'S -> b S b', 'S -> c'])
     , '\n'.join(['S -> b S b b', 'S -> A', 'A -> a A', 'A -> '])
     , '\n'.join(['S -> A B', 'A -> A A', 'B -> B B', 'A -> a', 'B -> b'])
     , '\n'.join(['S -> S S', 'S -> a'])
@@ -81,6 +81,6 @@ def manual_suite_cfpq(request):
     return request.param
 
 
-@pytest.fixture(scope='session', params=[hellings, mxm_cfpq, tensor_cfpq])
+@pytest.fixture(scope='session', params=[hellings, mxm_cfpq, tensor_cfg_cfpq, tensor_rsa_cfpq])
 def cfpq_algo(request):
     return request.param

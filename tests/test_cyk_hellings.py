@@ -1,6 +1,6 @@
-from src.label_graph import LabelGraph
-from src.cnf import WeakCNF
 from src.cfg_algorithms import cyk
+from src.label_graph import LabelGraph
+from src.regex_cfg import RegexCFG
 
 
 def test_manual_cyk(manual_suite):
@@ -29,7 +29,12 @@ def test_manual_cfpq(manual_suite_cfpq, cfpq_algo, tmp_path):
     graph_file.write_text('\n'.join(manual_suite_cfpq['edges']))
 
     g = LabelGraph.from_txt(graph_file)
-    gr = WeakCNF.from_text(manual_suite_cfpq['cnf'])
+
+    if cfpq_algo.__name__ == 'tensor_rsa_cfpq':
+        gr = RegexCFG.from_text(manual_suite_cfpq['cnf'])
+    else:
+        gr = RegexCFG.from_text(manual_suite_cfpq['cnf']).to_cnf()
+
     actual = cfpq_algo(g, gr)
     expected = manual_suite_cfpq['expected']
 

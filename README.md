@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/Pogozhelskaya/formal-languages-practice.svg?branch=Task01)](https://travis-ci.com/Pogozhelskaya/formal-languages-practice)
 # SPbU Formal Languages course assignments
 
- ### Required libraries:
+### Required libraries:
  * [pygraphblas](https://github.com/michelp/pygraphblas)
 
  * [pyformlang](https://pypi.org/project/pyformlang/)
@@ -49,3 +49,30 @@ chmod +x run.sh
 ### Experimental analyses
 * After testing LUBM graphs dataset, there has been detected no difference between calculating transitive closure with squaring and transitive closure with multiplying by adjacency matrix. More detailed analysis report can be found at report.pdf. 
 * Report about time comparison of different CFPQ-algorithms can be found at report_cfpq.ipynb.
+
+### Query Language Grammar
+```
+Script -> (Stmt)+
+Stmt -> connect Path ; | select Result from Graph ;
+Path -> ((Word | /)+)
+Result -> pairs | count
+Graph -> intersect of Graph and Graph | Query | Word
+Query -> Word | \( Query \) | \( Query \| Query ( \| Query )* \) | \( Query \* \) | \( Query \? \) | \( Query \+ \)
+Word -> (Char)+
+Char -> (a|(b|(c|(d|(e|(f|(g|(h|(i|(j|(k|(l|(m|(n|(o|(p|(q|(r|(s|(t|(u|(v|(w|(x|(y|(z|(0|(1|(2|(3|(4|(5|(6|(7|(8|(9|_))))))))))))))))))))))))))))))))))))
+
+```
+
+### How to run analyzer
+```
+analyzer.py --script {path_to_script)
+```
+
+### Example of script
+
+```
+connect db/db_name ;
+select pairs from graph ;
+select count from intersect of graph and (((((3?)6)*)+)(5|4)*) ;
+```
+

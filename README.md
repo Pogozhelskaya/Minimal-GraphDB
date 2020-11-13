@@ -52,15 +52,25 @@ chmod +x run.sh
 
 ### Query Language Grammar
 ```
-Script -> (Stmt)+
-Stmt -> connect Path ; | select Result from Graph ;
-Path -> ((Word | /)+)
-Result -> pairs | count
-Graph -> intersect of Graph and Graph | Query | Word
-Query -> Word | \( Query \) | \( Query \| Query ( \| Query )* \) | \( Query \* \) | \( Query \? \) | \( Query \+ \)
-Word -> (Char)+
-Char -> (a|(b|(c|(d|(e|(f|(g|(h|(i|(j|(k|(l|(m|(n|(o|(p|(q|(r|(s|(t|(u|(v|(w|(x|(y|(z|(0|(1|(2|(3|(4|(5|(6|(7|(8|(9|_))))))))))))))))))))))))))))))))))))
-
+S (Stmt) (Stmt)*
+Stmt c o n n e c t Blank Path Blank ;
+Stmt s e l e c t Blank Result Blank f r o m Blank Graph Blank ;
+Path ((Word | /)) ((Word | /)*)
+Result p a i r s
+Result c o u n t
+Graph i n t e r s e c t Blank o f Blank Graph Blank a n d Blank Graph
+Graph Query
+Graph Word
+Query Word
+Query ( \( ) Query ( \) )
+Query ( Query Query )
+Query ( \( )  Query ( \| ) Query ( ( \| ) Query )* ( \) )
+Query ( \( ) Query ( \* ) ( \) )
+Query ( \( ) Query ( \? ) ( \) )
+Query ( \( ) Query ( \+ ) ( \) )
+Word (Char) (Char)*
+Char (a|(b|(c|(d|(e|(f|(g|(h|(i|(j|(k|(l|(m|(n|(o|(p|(q|(r|(s|(t|(u|(v|(w|(x|(y|(z|(0|(1|(2|(3|(4|(5|(6|(7|(8|(9|_))))))))))))))))))))))))))))))))))))
+Blank @
 ```
 
 ### How to run analyzer

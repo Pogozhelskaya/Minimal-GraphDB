@@ -6,6 +6,11 @@ from src.cfg_algorithms import cyk
 from src.regex_cfg import RegexCFG
 
 
+def check(script):
+    script = [Terminal(x) for x in script.replace(' ', '@')]
+    return cyk(script, RegexCFG.from_txt('grammar.txt').to_cnf())
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='script analyzer using CYK')
     parser.add_argument(
@@ -22,8 +27,6 @@ if __name__ == '__main__':
         for line in f:
             script += line.replace('\n', '')
 
-    script = [Terminal(x) for x in script.replace(' ', '@')]
-    print(script)
-    accepts = cyk(script, RegexCFG.from_txt('grammar.txt').to_cnf())
+    accepts = check(script)
 
     print(f'Script is {"accepted" if accepts else "not accepted"}')

@@ -1,0 +1,21 @@
+"Algorithm","Graph","File","Grammar","Time (in microseconds)","Control sum"
+"hellings","WorstCase","worstcase_32","g1",60140,272
+"hellings","WorstCase","worstcase_8","g1",1952,20
+"hellings","WorstCase","worstcase_4","g1",1439,6
+"hellings","WorstCase","worstcase_16","g1",5503,72
+"hellings","WorstCase","worstcase_64","g1",1153402,1056
+"mxm_cfpq","WorstCase","worstcase_32","g1",4686,272
+"mxm_cfpq","WorstCase","worstcase_8","g1",2210,20
+"mxm_cfpq","WorstCase","worstcase_4","g1",1998,6
+"mxm_cfpq","WorstCase","worstcase_16","g1",3219,72
+"mxm_cfpq","WorstCase","worstcase_64","g1",8287,1056
+"tensor_cfg_cfpq","WorstCase","worstcase_32","g1",77634,272
+"tensor_cfg_cfpq","WorstCase","worstcase_8","g1",11123,20
+"tensor_cfg_cfpq","WorstCase","worstcase_4","g1",5642,6
+"tensor_cfg_cfpq","WorstCase","worstcase_16","g1",26435,72
+"tensor_cfg_cfpq","WorstCase","worstcase_64","g1",316616,1056
+"tensor_rsa_cfpq","WorstCase","worstcase_32","g1",18096,272
+"tensor_rsa_cfpq","WorstCase","worstcase_8","g1",4188,20
+"tensor_rsa_cfpq","WorstCase","worstcase_4","g1",3142,6
+"tensor_rsa_cfpq","WorstCase","worstcase_16","g1",7999,72
+"tensor_rsa_cfpq","WorstCase","worstcase_64","g1",61912,1056

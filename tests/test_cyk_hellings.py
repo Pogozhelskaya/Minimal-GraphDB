@@ -1,6 +1,7 @@
-from src.label_graph import LabelGraph
-from src.cnf import WeakCNF
 from src.cfg_algorithms import cyk
+from src.label_graph import LabelGraph
+from src.regex_cfg import RegexCFG
+from analyzer import check
 
 
 def test_manual_cyk(manual_suite):
@@ -8,6 +9,12 @@ def test_manual_cyk(manual_suite):
     word = manual_suite['word']
     expected = manual_suite['expected']
     assert cyk(word, cfg) == expected
+
+
+def test_scripts(manual_suite_cyk):
+    script = manual_suite_cyk['script']
+    expected = manual_suite_cyk['expected']
+    assert check(script) == expected
 
 
 def test_auto_true_cyk(auto_true_suite):
@@ -29,7 +36,12 @@ def test_manual_cfpq(manual_suite_cfpq, cfpq_algo, tmp_path):
     graph_file.write_text('\n'.join(manual_suite_cfpq['edges']))
 
     g = LabelGraph.from_txt(graph_file)
-    gr = WeakCNF.from_text(manual_suite_cfpq['cnf'])
+
+    if cfpq_algo.__name__ == 'tensor_rsa_cfpq':
+        gr = RegexCFG.from_text(manual_suite_cfpq['cnf'])
+    else:
+        gr = RegexCFG.from_text(manual_suite_cfpq['cnf']).to_cnf()
+
     actual = cfpq_algo(g, gr)
     expected = manual_suite_cfpq['expected']
 

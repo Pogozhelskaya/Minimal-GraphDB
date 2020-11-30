@@ -3,16 +3,41 @@ from itertools import product, chain
 from src.cnf import WeakCNF
 import pytest
 from pyformlang.cfg import *
-from src.cfg_algorithms import hellings, mxm_cfpq, tensor_cfpq
+from src.cfg_algorithms import hellings, mxm_cfpq, tensor_cfg_cfpq, tensor_rsa_cfpq
 
 grammars = [
-    '\n'.join(['S -> a S\nS -> '])
-    , '\n'.join(['S -> a S a\nS -> b S b\nS -> c'])
+    '\n'.join(['S -> a S', 'S -> '])
+    , '\n'.join(['S -> a S a', 'S -> b S b', 'S -> c'])
     , '\n'.join(['S -> b S b b', 'S -> A', 'A -> a A', 'A -> '])
     , '\n'.join(['S -> A B', 'A -> A A', 'B -> B B', 'A -> a', 'B -> b'])
     , '\n'.join(['S -> S S', 'S -> a'])
     , '\n'.join(['S -> a S b S', 'S -> '])
 ]
+
+scripts = ['connect db/db_name ;',
+           'select pairs from graph ;',
+           'select count from intersect of graph and (((((3?)6)*)+)(5|4)*) ;',
+           'connect db/db_name ;\
+           select pairs from graph ;\
+           select count from intersect of graph and (((((3?)6)*)+)(5|4)*) ;',
+           'select count from intersect of graph and ((3?6*)+)(5|4)*) ;'
+           'connect db_name ;\
+           from intersect select * of graph and (((((3?)6)*)+)(5|4)*) ;']
+
+
+@pytest.fixture(scope='session', params=list(chain(
+    [(scripts[0], True)]
+    , [(scripts[1], True)]
+    , [(scripts[2], True)]
+    , [(scripts[3], False)]
+    , [(scripts[4], False)]
+)))
+def manual_suite_cyk(request):
+    script, expected = request.param
+    return {
+        'script': script
+        , 'expected': expected
+    }
 
 
 @pytest.fixture(scope='session', params=list(chain(
@@ -81,6 +106,6 @@ def manual_suite_cfpq(request):
     return request.param
 
 
-@pytest.fixture(scope='session', params=[hellings, mxm_cfpq, tensor_cfpq])
+@pytest.fixture(scope='session', params=[hellings, mxm_cfpq, tensor_cfg_cfpq, tensor_rsa_cfpq])
 def cfpq_algo(request):
     return request.param

@@ -14,6 +14,31 @@ grammars = [
     , '\n'.join(['S -> a S b S', 'S -> '])
 ]
 
+scripts = ['connect db/db_name ;',
+           'select pairs from graph ;',
+           'select count from intersect of graph and (((((3?)6)*)+)(5|4)*) ;',
+           'connect db/db_name ;\
+           select pairs from graph ;\
+           select count from intersect of graph and (((((3?)6)*)+)(5|4)*) ;',
+           'select count from intersect of graph and ((3?6*)+)(5|4)*) ;'
+           'connect db_name ;\
+           from intersect select * of graph and (((((3?)6)*)+)(5|4)*) ;']
+
+
+@pytest.fixture(scope='session', params=list(chain(
+    [(scripts[0], True)]
+    , [(scripts[1], True)]
+    , [(scripts[2], True)]
+    , [(scripts[3], False)]
+    , [(scripts[4], False)]
+)))
+def manual_suite_cyk(request):
+    script, expected = request.param
+    return {
+        'script': script
+        , 'expected': expected
+    }
+
 
 @pytest.fixture(scope='session', params=list(chain(
     [(grammars[0], 'aaaa', True)]

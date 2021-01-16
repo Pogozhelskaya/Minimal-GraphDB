@@ -1,6 +1,7 @@
 from src.cfg_algorithms import cyk
 from src.label_graph import LabelGraph
 from src.regex_cfg import RegexCFG
+from analyzer import check
 
 
 def test_manual_cyk(manual_suite):
@@ -8,6 +9,12 @@ def test_manual_cyk(manual_suite):
     word = manual_suite['word']
     expected = manual_suite['expected']
     assert cyk(word, cfg) == expected
+
+
+def test_scripts(manual_suite_cyk):
+    script = manual_suite_cyk['script']
+    expected = manual_suite_cyk['expected']
+    assert check(script) == expected
 
 
 def test_auto_true_cyk(auto_true_suite):
